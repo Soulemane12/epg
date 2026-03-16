@@ -1,10 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useApp } from "@/components/providers/AppProvider";
 
 export default function LandingPage() {
-  const { seedDemoData, resetStore, currentUser } = useApp();
+  const { seedDemoData, resetStore, login, currentUser, store } = useApp();
+  const router = useRouter();
+
+  const enterDemo = () => {
+    // Seed if empty, then log in as admin
+    if (store.users.length === 0) seedDemoData();
+    // Give state a tick to settle, then log in
+    setTimeout(() => {
+      login("admin@epg.com", "admin123");
+      router.push("/dashboard");
+    }, 50);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 text-white flex flex-col">
@@ -51,6 +63,12 @@ export default function LandingPage() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">
+          <button
+            onClick={enterDemo}
+            className="bg-green-500 hover:bg-green-400 text-white px-8 py-3.5 rounded-xl font-bold text-base transition-colors shadow-lg"
+          >
+            ⚡ Enter Demo — No Sign Up
+          </button>
           <Link
             href="/apply"
             className="bg-white text-blue-900 px-8 py-3.5 rounded-xl font-bold text-base hover:bg-blue-50 transition-colors shadow-lg"

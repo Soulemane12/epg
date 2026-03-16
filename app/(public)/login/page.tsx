@@ -6,9 +6,17 @@ import Link from "next/link";
 import { useApp } from "@/components/providers/AppProvider";
 
 export default function LoginPage() {
-  const { login, currentUser } = useApp();
+  const { login, seedDemoData, store, currentUser } = useApp();
   const router = useRouter();
   const params = useSearchParams();
+
+  const enterDemo = () => {
+    if (store.users.length === 0) seedDemoData();
+    setTimeout(() => {
+      login("admin@epg.com", "admin123");
+      router.push("/dashboard");
+    }, 50);
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,6 +69,18 @@ export default function LoginPage() {
               Your application was not approved. Contact EPG for more information.
             </div>
           )}
+
+          <button
+            type="button"
+            onClick={enterDemo}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors mb-4"
+          >
+            ⚡ Enter Demo — No Sign Up
+          </button>
+          <div className="relative mb-4">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-neutral-200 dark:border-neutral-700" /></div>
+            <div className="relative flex justify-center text-xs text-neutral-400"><span className="bg-white dark:bg-neutral-900 px-2">or sign in with credentials</span></div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
