@@ -46,9 +46,11 @@ export function useAppStore() {
   // Initial hydration
   useEffect(() => {
     const loaded = loadStore();
-    setStoreState(loaded);
-    storeRef.current = loaded;
-    setIsHydrated(true);
+    queueMicrotask(() => {
+      setStoreState(loaded);
+      storeRef.current = loaded;
+      setIsHydrated(true);
+    });
   }, []);
 
   // Cross-tab sync

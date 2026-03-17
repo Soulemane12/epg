@@ -22,7 +22,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const statusMsg = params.get("status");
 
   useEffect(() => {
@@ -34,100 +33,96 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!email.trim() || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
+    if (!email.trim() || !password) { setError("Please enter your email and password."); return; }
     setLoading(true);
     const result = login(email, password);
     setLoading(false);
-    if (result.ok) {
-      router.push("/dashboard");
-    } else {
-      setError(result.reason ?? "Sign in failed.");
-    }
+    if (result.ok) { router.push("/dashboard"); } else { setError(result.reason ?? "Sign in failed."); }
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center px-4 py-10" style={{ background: "var(--bg)" }}>
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-blue-700 dark:text-blue-400 tracking-tight">EPG</Link>
-          <p className="text-neutral-500 dark:text-neutral-400 text-sm mt-1">Executive Partners Group</p>
+        {/* Logo */}
+        <div className="mb-6 text-center">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold text-white"
+              style={{ background: "linear-gradient(135deg, var(--sidebar-active-accent), #f0c48d)" }}
+            >
+              E
+            </div>
+            <span className="text-sm font-semibold" style={{ color: "var(--text-1)" }}>EPG</span>
+          </Link>
+          <p className="mt-1 text-xs" style={{ color: "var(--text-3)" }}>Executive Partners Group</p>
         </div>
 
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-200 dark:border-neutral-800 p-7">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">Sign In</h2>
+        {/* Card */}
+        <div className="rounded-2xl border p-6" style={{ background: "var(--bg-card)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}>
+          <h1 className="mb-5 text-base font-semibold" style={{ color: "var(--text-1)" }}>Sign In</h1>
 
           {statusMsg === "pending" && (
-            <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4 text-sm text-yellow-800 dark:text-yellow-200">
+            <div className="mb-4 rounded-xl px-3 py-2.5 text-xs font-medium" style={{ background: "rgba(178,118,39,0.1)", border: "1px solid rgba(178,118,39,0.18)", color: "#94611e" }}>
               Your application is pending admin approval.
             </div>
           )}
           {statusMsg === "rejected" && (
-            <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 mb-4 text-sm text-red-800 dark:text-red-200">
+            <div className="mb-4 rounded-xl px-3 py-2.5 text-xs font-medium" style={{ background: "rgba(180,84,74,0.08)", border: "1px solid rgba(180,84,74,0.14)", color: "var(--danger)" }}>
               Your application was not approved. Contact EPG for more information.
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={enterDemo}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors mb-4"
-          >
-            ⚡ Enter Demo — No Sign Up
-          </button>
-          <div className="relative mb-4">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-neutral-200 dark:border-neutral-700" /></div>
-            <div className="relative flex justify-center text-xs text-neutral-400"><span className="bg-white dark:bg-neutral-900 px-2">or sign in with credentials</span></div>
+          {/* Demo credentials hint */}
+          <div className="mb-4 rounded-xl p-3 text-xs" style={{ background: "rgba(215,154,82,0.08)", border: "1px solid rgba(215,154,82,0.14)" }}>
+            <p className="font-semibold mb-1" style={{ color: "var(--primary-text)" }}>Demo credentials</p>
+            <p style={{ color: "var(--text-2)" }}>
+              <span className="font-mono">admin@epg.com</span> / <span className="font-mono">admin123</span>
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Email</label>
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "var(--text-2)" }}>Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="app-input"
                 placeholder="you@example.com"
                 autoComplete="email"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Password</label>
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "var(--text-2)" }}>Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="app-input"
                 placeholder="••••••••"
                 autoComplete="current-password"
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-            )}
+            {error && <p className="text-xs font-medium" style={{ color: "var(--danger)" }}>{error}</p>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors"
-            >
-              {loading ? "Signing in…" : "Sign In"}
-            </button>
+            <div className="flex gap-2 pt-1">
+              <button type="submit" disabled={loading} className="btn-primary flex-1 disabled:opacity-50">
+                {loading ? "Signing in…" : "Sign In"}
+              </button>
+              <button type="button" onClick={enterDemo} className="btn-secondary flex-1">
+                Enter Demo
+              </button>
+            </div>
           </form>
         </div>
 
-        <p className="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-4">
+        <p className="mt-4 text-center text-xs" style={{ color: "var(--text-3)" }}>
           Not a member?{" "}
-          <Link href="/apply" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-            Apply for access
-          </Link>
+          <Link href="/apply" className="font-medium" style={{ color: "var(--primary-text)" }}>Apply for access</Link>
         </p>
-        <p className="text-center text-xs text-neutral-400 dark:text-neutral-600 mt-2">
-          <Link href="/" className="hover:underline">← Back to home</Link>
+        <p className="mt-2 text-center text-xs">
+          <Link href="/" style={{ color: "var(--text-3)" }}>← Back to home</Link>
         </p>
       </div>
     </div>

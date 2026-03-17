@@ -12,11 +12,6 @@ const BLANK: ProfileForm = {
   website: "", state: "", industry: "", specialties: [], photoUrl: "", videoUrl: "",
 };
 
-const PROFILE_FIELDS: (keyof ProfileForm)[] = [
-  "bio", "title", "companyName", "state", "industry",
-  "phone", "website", "photoUrl", "videoUrl",
-];
-
 function completeness(form: ProfileForm): number {
   let filled = 0;
   if (form.bio.trim()) filled++;
@@ -35,13 +30,15 @@ function completeness(form: ProfileForm): number {
 export default function ProfilePage() {
   const { store, currentUser, updateProfile } = useApp();
   const existing = store.profiles.find((p) => p.userId === currentUser?.id);
-  const [form, setForm] = useState<ProfileForm>(existing ? { ...existing } : { ...BLANK });
+  const [form, setForm] = useState<ProfileForm>(() => (existing ? { ...existing } : { ...BLANK }));
   const [expertiseInput, setExpertiseInput] = useState("");
   const [specialtyInput, setSpecialtyInput] = useState("");
 
   useEffect(() => {
-    if (existing) setForm({ ...existing });
-  }, [existing?.userId]);
+    if (!existing) return;
+    const next = { ...existing };
+    queueMicrotask(() => setForm(next));
+  }, [existing]);
 
   const set = (k: keyof ProfileForm) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>

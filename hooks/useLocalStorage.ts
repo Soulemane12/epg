@@ -3,16 +3,15 @@
 import { useEffect, useState } from "react";
 
 export function useLocalStorageState<T>(key: string, initialValue: T) {
-  const [value, setValue] = useState<T>(initialValue);
-
-  useEffect(() => {
+  const [value, setValue] = useState<T>(() => {
+    if (typeof window === "undefined") return initialValue;
     try {
       const raw = window.localStorage.getItem(key);
-      if (raw) setValue(JSON.parse(raw) as T);
+      return raw ? (JSON.parse(raw) as T) : initialValue;
     } catch {
-      // Corrupted value — keep initialValue
+      return initialValue;
     }
-  }, [key]);
+  });
 
   useEffect(() => {
     try {

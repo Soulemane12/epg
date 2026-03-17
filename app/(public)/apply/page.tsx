@@ -34,109 +34,109 @@ export default function ApplyPage() {
     setLoading(true);
     const result = applyForAccess(form);
     setLoading(false);
-    if (result.ok) {
-      setSubmitted(true);
-    } else {
-      setError(result.reason ?? "Application failed.");
-    }
+    if (result.ok) { setSubmitted(true); } else { setError(result.reason ?? "Application failed."); }
   };
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center px-4" style={{ background: "var(--bg)" }}>
         <div className="w-full max-w-sm text-center">
-          <div className="text-5xl mb-4">✅</div>
-          <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">Application Submitted</h2>
-          <p className="text-neutral-500 dark:text-neutral-400 mb-6">
-            An EPG administrator will review your application. You will be notified once approved.
-          </p>
-          <Link href="/login" className="text-blue-600 dark:text-blue-400 font-medium hover:underline text-sm">
-            Return to Sign In
-          </Link>
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "rgba(45,138,95,0.12)", border: "1px solid rgba(45,138,95,0.18)" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M5 13l4 4L19 7" stroke="var(--success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h1 className="text-lg font-semibold" style={{ color: "var(--text-1)" }}>Application Submitted</h1>
+          <p className="mt-2 text-sm" style={{ color: "var(--text-2)" }}>An EPG administrator will review your application. You will be notified once approved.</p>
+          <div className="mt-6">
+            <Link href="/login" className="btn-primary">Return to Sign In</Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-blue-700 dark:text-blue-400 tracking-tight">EPG</Link>
-          <p className="text-neutral-500 dark:text-neutral-400 text-sm mt-1">Apply for Membership</p>
+    <div className="flex min-h-screen items-center justify-center px-4 py-10" style={{ background: "var(--bg)" }}>
+      <div className="w-full max-w-lg">
+        {/* Logo */}
+        <div className="mb-6 text-center">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold text-white" style={{ background: "linear-gradient(135deg, var(--sidebar-active-accent), #f0c48d)" }}>E</div>
+            <span className="text-sm font-semibold" style={{ color: "var(--text-1)" }}>EPG</span>
+          </Link>
+          <p className="mt-1 text-xs" style={{ color: "var(--text-3)" }}>Apply for Membership</p>
         </div>
 
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-200 dark:border-neutral-800 p-7">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">Request Access</h2>
+        <div className="rounded-2xl border p-6" style={{ background: "var(--bg-card)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}>
+          <div className="mb-5 flex items-center justify-between">
+            <h1 className="text-base font-semibold" style={{ color: "var(--text-1)" }}>Request Access</h1>
+            <Link href="/login" className="text-xs font-medium" style={{ color: "var(--primary-text)" }}>Already a member?</Link>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Full Name *</label>
-                <input value={form.fullName} onChange={set("fullName")} className={inputCls} placeholder="Jane Smith" />
+                <label className={lbl}>Full Name *</label>
+                <input value={form.fullName} onChange={set("fullName")} className="app-input" placeholder="Jane Smith" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Job Title *</label>
-                <input value={form.title} onChange={set("title")} className={inputCls} placeholder="CEO" />
+                <label className={lbl}>Job Title *</label>
+                <input value={form.title} onChange={set("title")} className="app-input" placeholder="CEO" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Company Name *</label>
-              <input value={form.companyName} onChange={set("companyName")} className={inputCls} placeholder="Acme Corp" />
+              <label className={lbl}>Company Name *</label>
+              <input value={form.companyName} onChange={set("companyName")} className="app-input" placeholder="Acme Corp" />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">State *</label>
-                <select value={form.state} onChange={set("state")} className={inputCls}>
+                <label className={lbl}>State *</label>
+                <select value={form.state} onChange={set("state")} className="app-input">
                   <option value="">Select state</option>
                   {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Industry *</label>
-                <select value={form.industry} onChange={set("industry")} className={inputCls}>
+                <label className={lbl}>Industry *</label>
+                <select value={form.industry} onChange={set("industry")} className="app-input">
                   <option value="">Select industry</option>
                   {INDUSTRIES.map((i) => <option key={i} value={i}>{i}</option>)}
                 </select>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Email *</label>
-              <input type="email" value={form.email} onChange={set("email")} className={inputCls} placeholder="you@company.com" autoComplete="email" />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className={lbl}>Email *</label>
+                <input type="email" value={form.email} onChange={set("email")} className="app-input" placeholder="you@company.com" autoComplete="email" />
+              </div>
+              <div>
+                <label className={lbl}>Password *</label>
+                <input type="password" value={form.password} onChange={set("password")} className="app-input" placeholder="Min. 6 characters" autoComplete="new-password" />
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Password *</label>
-              <input type="password" value={form.password} onChange={set("password")} className={inputCls} placeholder="Min. 6 characters" autoComplete="new-password" />
+              <label className={lbl}>Bio <span style={{ color: "var(--text-3)", fontWeight: 400 }}>(optional)</span></label>
+              <textarea value={form.bio} onChange={set("bio")} className="app-input resize-none" rows={3} placeholder="Brief professional background…" />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Bio <span className="text-neutral-400">(optional)</span></label>
-              <textarea value={form.bio} onChange={set("bio")} className={inputCls + " resize-none"} rows={3} placeholder="Brief professional background…" />
+            {error && <p className="text-xs font-medium" style={{ color: "var(--danger)" }}>{error}</p>}
+
+            <div className="flex gap-2 pt-1">
+              <button type="submit" disabled={loading} className="btn-primary flex-1 disabled:opacity-50">
+                {loading ? "Submitting…" : "Submit Application"}
+              </button>
+              <Link href="/" className="btn-secondary">Back</Link>
             </div>
-
-            {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors"
-            >
-              {loading ? "Submitting…" : "Submit Application"}
-            </button>
           </form>
         </div>
-
-        <p className="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-4">
-          Already a member?{" "}
-          <Link href="/login" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">Sign in</Link>
-        </p>
       </div>
     </div>
   );
 }
 
-const inputCls = "w-full px-3 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
+const lbl = "mb-1.5 block text-xs font-medium" as const;

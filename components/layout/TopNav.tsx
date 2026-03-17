@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useApp } from "@/components/providers/AppProvider";
+import { getInitials } from "@/lib/utils";
 
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -21,20 +22,49 @@ export function TopNav() {
   const pathname = usePathname();
   const { store, currentUser } = useApp();
 
-  const title = Object.entries(PAGE_TITLES).find(([key]) => pathname === key || pathname.startsWith(key + "/"))?.[1] ?? "EPG";
+  const title = Object.entries(PAGE_TITLES).find(
+    ([key]) => pathname === key || pathname.startsWith(key + "/")
+  )?.[1] ?? "EPG";
 
   const unreadNotifs = store.notifications.filter(
     (n) => n.userId === currentUser?.id && !n.read
   ).length;
 
   return (
-    <header className="h-14 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 flex items-center px-6 gap-4">
-      <h1 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 flex-1">{title}</h1>
-      {unreadNotifs > 0 && (
-        <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs flex items-center justify-center font-bold">
-          {unreadNotifs}
-        </span>
-      )}
+    <header
+      className="flex h-14 flex-shrink-0 items-center gap-4 px-5"
+      style={{
+        background: "var(--bg-card)",
+        borderBottom: "1px solid var(--border)",
+      }}
+    >
+      <h1 className="flex-1 text-sm font-semibold" style={{ color: "var(--text-1)" }}>
+        {title}
+      </h1>
+
+      <div className="flex items-center gap-2.5">
+        {unreadNotifs > 0 && (
+          <span
+            className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold text-white"
+            style={{ background: "var(--danger)" }}
+          >
+            {unreadNotifs}
+          </span>
+        )}
+        {currentUser && (
+          <div className="flex items-center gap-2">
+            <div
+              className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ background: "linear-gradient(135deg, var(--sidebar-active-accent), #f0c48d)" }}
+            >
+              {getInitials(currentUser.fullName)}
+            </div>
+            <span className="text-sm font-medium" style={{ color: "var(--text-1)" }}>
+              {currentUser.fullName.split(" ")[0]}
+            </span>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

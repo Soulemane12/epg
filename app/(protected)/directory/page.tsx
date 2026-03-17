@@ -20,7 +20,7 @@ export default function DirectoryPage() {
   const members = useMemo(() => {
     const approved = store.users.filter((u) => u.approvalStatus === "approved");
 
-    let filtered = approved.filter((u) => {
+    const filtered = approved.filter((u) => {
       if (search) {
         const q = search.toLowerCase();
         const p = store.profiles.find((pr) => pr.userId === u.id);

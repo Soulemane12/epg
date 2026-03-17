@@ -15,15 +15,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const store = useAppStore();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   // Show full-screen loader until hydrated — prevents auth flash
   if (!mounted || !store.isHydrated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-neutral-950">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-neutral-500">Loading EPG…</p>
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="surface-panel-strong flex flex-col items-center gap-4 px-10 py-10 text-center">
+          <div
+            className="h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"
+            style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }}
+          />
+          <div>
+            <p className="page-kicker">EPG</p>
+            <p className="mt-2 text-sm" style={{ color: "var(--text-2)" }}>
+              Loading the member network...
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -39,30 +50,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
 function ToastDisplay() {
   const { toast, setToast } = useApp();
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (toast) {
-      setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-        setTimeout(() => setToast(null), 300);
-      }, 3000);
+      const timer = setTimeout(() => setToast(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [toast, setToast]);
 
   if (!toast) return null;
 
-  const colors: Record<string, string> = {
-    success: "bg-green-600",
-    error: "bg-red-600",
-    info: "bg-blue-600",
+  const colors: Record<string, { background: string; color: string; borderColor: string }> = {
+    success: {
+      background: "rgba(45, 138, 95, 0.96)",
+      color: "#f4fff8",
+      borderColor: "rgba(215, 255, 236, 0.2)",
+    },
+    error: {
+      background: "rgba(180, 84, 74, 0.96)",
+      color: "#fff6f4",
+      borderColor: "rgba(255, 220, 216, 0.22)",
+    },
+    info: {
+      background: "rgba(23, 61, 56, 0.96)",
+      color: "#fff8ee",
+      borderColor: "rgba(255, 227, 194, 0.16)",
+    },
   };
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-lg text-white text-sm shadow-lg transition-all duration-300 ${colors[toast.type] ?? "bg-neutral-800"} ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+      className="fixed bottom-6 right-6 z-50 rounded-[1.2rem] px-4 py-3 text-sm shadow-lg transition-all duration-300"
+      style={{
+        ...(colors[toast.type] ?? colors.info),
+        borderWidth: "1px",
+        boxShadow: "0 18px 40px rgba(23, 36, 31, 0.18)",
+      }}
     >
       {toast.message}
     </div>
